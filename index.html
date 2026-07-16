@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>+1000 de Aura Shop 🌙 | Tienda Online Santa Marta</title>
+<meta name="description" content="Oro laminado, vapes y calzado de moda con pago contra entrega en Santa Marta. Envíos express.">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- PapaParse -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<!-- Google Fonts: Display + Body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --aura-black: #0a0710;
+    --aura-black-2: #0f0a1a;
+    --aura-purple: #7c3aed;
+    --aura-purple-deep: #4c1d95;
+    --aura-lime: #c6ff00;
+    --aura-lime-dim: #9fd400;
+    --card-bg: rgba(255,255,255,0.035);
+    --card-border: rgba(255,255,255,0.08);
+  }
+  *{ -webkit-tap-highlight-color: transparent; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background-color: var(--aura-black);
+    font-family: 'Space Grotesk', sans-serif;
+    color: #f2f0f7;
+    overflow-x: hidden;
+  }
+  .font-display{ font-family: 'Syne', sans-serif; }
+
+  /* Aura background */
+  .aura-bg{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse 60% 40% at 15% 0%, rgba(124,58,237,0.35), transparent 60%),
+      radial-gradient(ellipse 55% 35% at 100% 15%, rgba(198,255,0,0.10), transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 90%, rgba(124,58,237,0.25), transparent 60%),
+      radial-gradient(ellipse 40% 30% at 0% 100%, rgba(198,255,0,0.08), transparent 60%),
+      var(--aura-black);
+  }
+
+  .glass{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .moon-glow{
+    filter: drop-shadow(0 0 6px rgba(198,255,0,0.55)) drop-shadow(0 0 14px rgba(124,58,237,0.55));
+    animation: moonBlink 4.5s ease-in-out infinite;
+  }
+  @keyframes moonBlink{
+    0%, 88%, 100% { opacity: 1; transform: scale(1); }
+    92% { opacity: 0.35; transform: scale(0.94); }
+    96% { opacity: 1; transform: scale(1); }
+  }
+
+  .lime-text{ color: var(--aura-lime); }
+
+  .btn-whatsapp{
+    background: linear-gradient(135deg, var(--aura-lime) 0%, var(--aura-lime-dim) 100%);
+    color: #0a0710;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-whatsapp:active{ transform: scale(0.96); }
+  .btn-whatsapp:hover{ box-shadow: 0 0 22px rgba(198,255,0,0.45); }
+
+  .chip{
+    transition: all .2s ease;
+    white-space: nowrap;
+  }
+  .chip.active{
+    background: linear-gradient(135deg, var(--aura-purple) 0%, #a855f7 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 18px rgba(124,58,237,0.55);
+  }
+
+  .card-enter{
+    animation: cardIn .45s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes cardIn{
+    from{ opacity: 0; transform: translateY(14px) scale(.97); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .tag-badge{
+    backdrop-filter: blur(6px);
+  }
+
+  ::-webkit-scrollbar{ width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{ background: var(--aura-purple-deep); border-radius: 10px; }
+
+  #categoryScroll::-webkit-scrollbar{ display: none; }
+  #categoryScroll{ -ms-overflow-style: none; scrollbar-width: none; }
+
+  .accordion-content{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+  }
+
+  .skel{
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 37%, rgba(255,255,255,0.04) 63%);
+    background-size: 400% 100%;
+    animation: skelShine 1.4s ease infinite;
+  }
+  @keyframes skelShine{
+    0%{ background-position: 100% 50%; }
+    100%{ background-position: 0 50%; }
+  }
+
+  .banner-marquee{
+    animation: marquee 16s linear infinite;
+  }
+  @keyframes marquee{
+    0%{ transform: translateX(0); }
+    100%{ transform: translateX(-50%); }
+  }
+
+  input:focus{ outline: none; }
+</style>
+</head>
+
+<body class="min-h-screen">
+<div class="aura-bg"></div>
+
+<!-- ============================================================
+  CONFIGURACIÓN — EDITA SOLO ESTA SECCIÓN
+============================================================= -->
+<script>
+  /* ---------------------------------------------------------------
+     1) URL DEL CATÁLOGO (GOOGLE SHEETS EN FORMATO CSV)
+     ---------------------------------------------------------------
+     Cómo obtenerla (hazlo UNA sola vez):
+       1. Abre tu hoja de cálculo en Google Sheets.
+       2. Ve a Archivo > Compartir > Publicar en la Web.
+       3. En "Vincular", elige la hoja específica de tu catálogo
+          (ej. "Productos").
+       4. En "Insertar", cambia el formato de "Página web" a "CSV".
+       5. Presiona "Publicar" y confirma.
+       6. Copia el enlace generado y pégalo abajo, reemplazando
+          el texto 'TU_URL_AQUÍ'.
+
+     La hoja debe tener EXACTAMENTE estas columnas (en cualquier
+     orden), con estos encabezados en la primera fila:
+       categoria | nombre | descripcion | precio | imagen | disponible
+
+       - categoria:   texto libre. Ej: Oro Laminado, Zapatos, Vapes
+       - nombre:      texto libre. Ej: Cadena Cubana 45cm
+       - descripcion: texto libre. Ej: Oro laminado 18k, broche reforzado
+       - precio:      solo números. Ej: 85000
+       - imagen:      URL pública de la foto del producto
+       - disponible:  escribe SI o NO (oculta el producto si es NO)
+  ------------------------------------------------------------------ */
+  const GOOGLE_SHEET_CSV_URL = 'TU_URL_AQUÍ';
+
+  /* ---------------------------------------------------------------
+     2) NÚMERO DE WHATSAPP PARA PEDIDOS
+     ---------------------------------------------------------------
+     Usa tu enlace wa.link (recomendado) o el formato estándar:
+       https://wa.me/57XXXXXXXXXX  (código de país + número, sin +)
+  ------------------------------------------------------------------ */
+  const WHATSAPP_BASE_URL = 'https://wa.me/573000000000';
+
+  /* ---------------------------------------------------------------
+     3) NOMBRE Y CIUDAD DE LA TIENDA (para el header y el banner)
+  ------------------------------------------------------------------ */
+  const STORE_NAME = '+1000 de Aura Shop';
+  const STORE_CITY = 'Santa Marta';
+</script>
+<!-- ============================================================ -->
+
+<!-- HEADER -->
+<header class="relative pt-8 pb-5 px-5">
+  <div class="flex flex-col items-center text-center gap-2">
+    <div class="relative flex items-center gap-2">
+      <i class="fa-solid fa-moon text-3xl lime-text moon-glow"></i>
+      <h1 class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight">
+        <span id="storeNameHeader">+1000 de Aura Shop</span>
+      </h1>
+    </div>
+    <p class="text-sm text-white/60 max-w-xs">
+      Oro laminado, vapes y calzado que marcan tendencia — con
+      <span class="lime-text font-medium">pago contra entrega</span>.
+    </p>
+  </div>
+
+  <!-- Banner envío express -->
+  <div class="mt-5 mx-auto max-w-md rounded-full glass px-4 py-2 flex items-center gap-2 overflow-hidden">
+    <i class="fa-solid fa-bolt lime-text text-sm shrink-0"></i>
+    <div class="overflow-hidden whitespace-nowrap flex-1">
+      <span id="expressBanner" class="text-xs font-medium text-white/85">
+        Envíos express hoy en Santa Marta 🌴 · Pago contra entrega · Cambios sin complicaciones
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- BUSCADOR -->
+<div class="px-5 mb-4">
+  <div class="relative max-w-md mx-auto">
+    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-sm"></i>
+    <input id="searchInput" type="text" placeholder="Buscar producto (ej. cadena, vape, tenis)..."
+      class="w-full glass rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/35 focus:border-[var(--aura-purple)] border transition-colors">
+  </div>
+</div>
+
+<!-- CATEGORÍAS (dinámicas) -->
+<div class="px-5 mb-6">
+  <div id="categoryScroll" class="flex gap-2 overflow-x-auto max-w-md mx-auto pb-1">
+    <!-- Se inyectan dinámicamente -->
+  </div>
+</div>
+
+<!-- ESTADO: SIN CONEXIÓN A SHEETS -->
+<div id="fallbackNotice" class="hidden px-5 mb-4">
+  <div class="max-w-md mx-auto glass rounded-2xl px-4 py-3 flex items-start gap-3 border border-[var(--aura-purple)]/40">
+    <i class="fa-solid fa-circle-info lime-text mt-0.5"></i>
+    <p class="text-xs text-white/70 leading-relaxed">
+      Mostrando catálogo de muestra. Conecta tu Google Sheet en
+      <code class="text-white/90">GOOGLE_SHEET_CSV_URL</code> para gestionar tu inventario en tiempo real.
+    </p>
+  </div>
+</div>
+
+<!-- GRID PRODUCTOS -->
+<main class="px-5 pb-4">
+  <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
+    <!-- Skeletons iniciales -->
+  </div>
+
+  <div id="emptyState" class="hidden text-center py-16">
+    <i class="fa-solid fa-moon text-4xl text-white/15 mb-3"></i>
+    <p class="text-white/40 text-sm">No encontramos productos con esos filtros.</p>
+  </div>
+</main>
+
+<!-- FAQ -->
+<section class="px-5 py-12 max-w-2xl mx-auto">
+  <h2 class="font-display font-bold text-xl text-center mb-1">Preguntas frecuentes</h2>
+  <p class="text-center text-white/50 text-xs mb-6">Todo lo que debes saber antes de pedir</p>
+
+  <div id="faqAccordion" class="space-y-3">
+    <!-- Se inyecta con JS -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="px-5 pb-10 pt-4 text-center">
+  <div class="flex items-center justify-center gap-2 mb-2">
+    <i class="fa-solid fa-moon lime-text text-sm"></i>
+    <span class="font-display font-bold text-sm" id="storeNameFooter">+1000 de Aura Shop</span>
+  </div>
+  <p class="text-white/35 text-xs">Envíos en <span id="storeCityFooter">Santa Marta</span> · Pago contra entrega 🌙</p>
+</footer>
+
+<!-- Botón flotante WhatsApp -->
+<a id="floatingWA" href="#" target="_blank" rel="noopener"
+  class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full btn-whatsapp shadow-2xl flex items-center justify-center text-2xl">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<script>
+(function(){
+  'use strict';
+
+  // ---------- Catálogo de respaldo (se usa si falla Sheets) ----------
+  const FALLBACK_PRODUCTS = [
+    {
+      categoria: 'Oro Laminado',
+      nombre: 'Cadena Cubana 45cm',
+      descripcion: 'Oro laminado 18k con broche reforzado, no se oxida ni pierde el brillo.',
+      precio: 85000,
+      imagen: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600&q=80&auto=format&fit=crop',
+      disponible: 'SI'
+    },
+    {
+      categoria: 'Zapatos',
+      nombre: 'Tenis Urban Flow Blanco',
+      descripcion: 'Suela ligera, estilo streetwear, combina con todo tu outfit.',
+      precio: 149000,
+      imagen: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80&auto=format&fit=crop',
+      disponible: 'SI'
+    },
+    {
+      categoria: 'Vapes',
+      nombre: 'Vape Frost Mint 5000 Puffs',
+      descripcion: 'Sabor mentolado intenso, batería de larga duración, diseño compacto.',
+      precio: 65000,
+      imagen: 'https://images.unsplash.com/photo-1611243705813-9de19c5c25a3?w=600&q=80&auto=format&fit=crop',
+      disponible: 'SI'
+    },
+    {
+      categoria: 'Oro Laminado',
+      nombre: 'Anillo Aura Doble Capa',
+      descripcion: 'Diseño minimalista en oro laminado, ideal para uso diario.',
+      precio: 45000,
+      imagen: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&auto=format&fit=crop',
+      disponible: 'SI'
+    }
+  ];
+
+  const FAQ_ITEMS = [
+    {
+      q: '¿Cómo cuido mis prendas de oro laminado?',
+      a: 'Evita el contacto prolongado con agua, perfumes y cremas. Guárdalas en un lugar seco y sin roce con otras joyas. Así conservas su brillo por mucho más tiempo.'
+    },
+    {
+      q: '¿Los vapes tienen garantía?',
+      a: 'Sí, todos nuestros vapes cuentan con garantía de fábrica por defectos de encendido o carga. Si llega dañado, lo cambiamos sin costo adicional.'
+    },
+    {
+      q: '¿Hacen envíos fuera de Santa Marta?',
+      a: 'Sí, cubrimos Santa Marta con entrega express el mismo día, y el resto del país mediante transportadora en 2-4 días hábiles.'
+    },
+    {
+      q: '¿Cómo funciona el pago contra entrega?',
+      a: 'Confirmas tu pedido por WhatsApp, coordinamos la entrega y pagas en efectivo o transferencia directamente al repartidor cuando recibes tu producto.'
+    }
+  ];
+
+  let allProducts = [];
+  let activeCategory = 'Todos';
+  let searchTerm = '';
+
+  const grid = document.getElementById('productGrid');
+  const emptyState = document.getElementById('emptyState');
+  const categoryScroll = document.getElementById('categoryScroll');
+  const fallbackNotice = document.getElementById('fallbackNotice');
+  const floatingWA = document.getElementById('floatingWA');
+
+  // Header/footer dynamic text
+  document.getElementById('storeNameHeader').textContent = STORE_NAME + ' 🌙';
+  document.getElementById('storeNameFooter').textContent = STORE_NAME;
+  document.getElementById('storeCityFooter').textContent = STORE_CITY;
+  document.getElementById('expressBanner').textContent =
+    `Envíos express hoy en ${STORE_CITY} 🌴 · Pago contra entrega · Cambios sin complicaciones`;
+  floatingWA.href = `${WHATSAPP_BASE_URL}?text=${encodeURIComponent('¡Hola, ' + STORE_NAME + '! 🌙 Quiero más información sobre sus productos.')}`;
+
+  function money(n){
+    const num = Number(n) || 0;
+    return num.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+  }
+
+  function renderSkeletons(count){
+    grid.innerHTML = '';
+    for(let i=0;i<count;i++){
+      const sk = document.createElement('div');
+      sk.className = 'rounded-2xl skel h-52';
+      grid.appendChild(sk);
+    }
+  }
+
+  function buildWhatsAppLink(product){
+    const msg = `¡Hola, ${STORE_NAME}! 🌙 Quiero pedir este producto con Pago Contra Entrega: ${product.nombre} por $${money(product.precio)} COP. Aquí están mis datos...`;
+    return `${WHATSAPP_BASE_URL}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function badgeForIndex(i){
+    const badges = ['¡Pago Contra Entrega!', 'Envío Gratis', '🔥 Más vendido'];
+    return badges[i % badges.length];
+  }
+
+  function renderCategories(){
+    const cats = ['Todos', ...new Set(allProducts.map(p => (p.categoria || '').trim()).filter(Boolean))];
+    categoryScroll.innerHTML = '';
+    cats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = `chip glass rounded-full px-4 py-2 text-xs font-medium text-white/75 border ${cat === activeCategory ? 'active' : ''}`;
+      btn.textContent = cat;
+      btn.addEventListener('click', () => {
+        activeCategory = cat;
+        renderCategories();
+        renderProducts();
+      });
+      categoryScroll.appendChild(btn);
+    });
+  }
+
+  function renderProducts(){
+    let list = allProducts.filter(p => (p.disponible || 'SI').trim().toUpperCase() !== 'NO');
+
+    if(activeCategory !== 'Todos'){
+      list = list.filter(p => (p.categoria || '').trim() === activeCategory);
+    }
+
+    if(searchTerm.trim()){
+      const t = searchTerm.trim().toLowerCase();
+      list = list.filter(p =>
+        (p.nombre || '').toLowerCase().includes(t) ||
+        (p.descripcion || '').toLowerCase().includes(t)
+      );
+    }
+
+    grid.innerHTML = '';
+
+    if(list.length === 0){
+      emptyState.classList.remove('hidden');
+      return;
+    }
+    emptyState.classList.add('hidden');
+
+    list.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'card-enter rounded-2xl glass overflow-hidden flex flex-col group';
+      card.style.animationDelay = `${(i % 12) * 0.04}s`;
+
+      card.innerHTML = `
+        <div class="relative overflow-hidden aspect-square">
+          <img src="${p.imagen || 'https://placehold.co/400x400/1a1025/c6ff00?text=Aura+Shop'}"
+               alt="${escapeHtml(p.nombre)}"
+               loading="lazy"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+               onerror="this.src='https://placehold.co/400x400/1a1025/c6ff00?text=Aura+Shop'">
+          <span class="tag-badge absolute top-2 left-2 text-[10px] font-semibold px-2 py-1 rounded-full bg-black/50 border border-white/10 lime-text">
+            ${badgeForIndex(i)}
+          </span>
+        </div>
+        <div class="p-3 flex flex-col flex-1 gap-1.5">
+          <span class="text-[10px] uppercase tracking-wide text-[var(--aura-purple)] font-semibold">${escapeHtml(p.categoria || '')}</span>
+          <h3 class="font-display font-semibold text-sm leading-tight line-clamp-2">${escapeHtml(p.nombre || '')}</h3>
+          <p class="text-[11px] text-white/50 line-clamp-2 flex-1">${escapeHtml(p.descripcion || '')}</p>
+          <div class="flex items-center justify-between mt-1">
+            <span class="font-display font-bold text-base lime-text">$${money(p.precio)}</span>
+          </div>
+          <a href="${buildWhatsAppLink(p)}" target="_blank" rel="noopener"
+             class="btn-whatsapp mt-2 w-full rounded-xl py-2.5 text-xs font-bold flex items-center justify-center gap-1.5">
+            <i class="fa-brands fa-whatsapp"></i> Pedir por WhatsApp
+          </a>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+  }
+
+  function renderFAQ(){
+    const wrap = document.getElementById('faqAccordion');
+    wrap.innerHTML = '';
+    FAQ_ITEMS.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = 'glass rounded-2xl overflow-hidden';
+      el.innerHTML = `
+        <button class="faq-toggle w-full text-left px-4 py-4 flex items-center justify-between gap-3">
+          <span class="text-sm font-medium">${item.q}</span>
+          <i class="fa-solid fa-chevron-down text-xs text-[var(--aura-lime)] transition-transform shrink-0"></i>
+        </button>
+        <div class="accordion-content px-4">
+          <p class="text-xs text-white/55 leading-relaxed pb-4">${item.a}</p>
+        </div>
+      `;
+      const btn = el.querySelector('.faq-toggle');
+      const content = el.querySelector('.accordion-content');
+      const icon = el.querySelector('i');
+      btn.addEventListener('click', () => {
+        const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+        // cerrar todos
+        wrap.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = '0px');
+        wrap.querySelectorAll('.faq-toggle i').forEach(ic => ic.style.transform = 'rotate(0deg)');
+        if(!isOpen){
+          content.style.maxHeight = content.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+      wrap.appendChild(el);
+    });
+  }
+
+  // ---------- Búsqueda ----------
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchTerm = e.target.value;
+    renderProducts();
+  });
+
+  // ---------- Carga del catálogo ----------
+  function loadFallback(){
+    allProducts = FALLBACK_PRODUCTS;
+    fallbackNotice.classList.remove('hidden');
+    renderCategories();
+    renderProducts();
+  }
+
+  function loadFromSheet(){
+    if(!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL === 'TU_URL_AQUÍ'){
+      loadFallback();
+      return;
+    }
+
+    Papa.parse(GOOGLE_SHEET_CSV_URL, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results){
+        const rows = (results.data || []).filter(r => r.nombre && r.nombre.trim());
+        if(rows.length === 0){
+          loadFallback();
+          return;
+        }
+        allProducts = rows.map(r => ({
+          categoria: (r.categoria || '').trim(),
+          nombre: (r.nombre || '').trim(),
+          descripcion: (r.descripcion || '').trim(),
+          precio: (r.precio || '0').toString().replace(/[^0-9.]/g, ''),
+          imagen: (r.imagen || '').trim(),
+          disponible: (r.disponible || 'SI').trim()
+        }));
+        fallbackNotice.classList.add('hidden');
+        renderCategories();
+        renderProducts();
+      },
+      error: function(){
+        loadFallback();
+      }
+    });
+  }
+
+  renderSkeletons(6);
+  renderFAQ();
+  loadFromSheet();
+})();
+</script>
+</body>
+</html>
