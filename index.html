@@ -168,6 +168,30 @@
     from{ opacity: 0; transform: translateY(40px); }
     to{ opacity: 1; transform: translateY(0); }
   }
+
+  .logo-circle{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--aura-lime);
+    box-shadow: 0 0 20px rgba(198,255,0,0.4);
+    animation: logoGlow 4.5s ease-in-out infinite;
+  }
+  @keyframes logoGlow{
+    0%, 88%, 100% { box-shadow: 0 0 20px rgba(198,255,0,0.4), 0 0 40px rgba(124,58,237,0.3); }
+    92% { box-shadow: 0 0 10px rgba(198,255,0,0.2), 0 0 20px rgba(124,58,237,0.15); }
+    96% { box-shadow: 0 0 20px rgba(198,255,0,0.4), 0 0 40px rgba(124,58,237,0.3); }
+  }
+
+  .logo-circle img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>
 </head>
 
@@ -217,22 +241,31 @@
   ------------------------------------------------------------------ */
   const STORE_NAME = '+1000 de Aura Shop';
   const STORE_CITY = 'Santa Marta';
+
+  /* ---------------------------------------------------------------
+     4) URL DEL LOGO (reemplaza con tu URL)
+  ------------------------------------------------------------------ */
+  const LOGO_URL = 'https://github.com/jesusants/mildeaurashop.github.io/raw/main/aura-shop-logo.jpg';
 </script>
 <!-- ============================================================ -->
 
 <!-- HEADER -->
-<header class="relative pt-8 pb-5 px-5">
-  <div class="flex flex-col items-center text-center gap-2">
-    <div class="relative flex items-center gap-2">
-      <i class="fa-solid fa-moon text-3xl lime-text moon-glow"></i>
+<header class="relative pt-6 pb-5 px-5">
+  <div class="flex flex-col items-center text-center gap-4">
+    <!-- Logo redondo centrado -->
+    <div class="logo-circle">
+      <img id="storeLogo" src="" alt="Aura Shop Logo">
+    </div>
+    
+    <div class="flex flex-col items-center gap-2">
       <h1 class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight">
         <span id="storeNameHeader">+1000 de Aura Shop</span>
       </h1>
+      <p class="text-sm text-white/60 max-w-xs">
+        Oro laminado, vapes y calzado que marcan tendencia — con
+        <span class="lime-text font-medium">pago contra entrega o transferencia</span>.
+      </p>
     </div>
-    <p class="text-sm text-white/60 max-w-xs">
-      Oro laminado, vapes y calzado que marcan tendencia — con
-      <span class="lime-text font-medium">pago contra entrega o transferencia</span>.
-    </p>
   </div>
 
   <!-- Banner envío express -->
@@ -428,6 +461,7 @@ Te enviaremos el número de rastreo para que veas exactamente por dónde viene t
   const categoryScroll = document.getElementById('categoryScroll');
   const fallbackNotice = document.getElementById('fallbackNotice');
   const floatingWA = document.getElementById('floatingWA');
+  const storeLogo = document.getElementById('storeLogo');
 
   // Modal
   const productModal = document.getElementById('productModal');
@@ -469,12 +503,18 @@ Te enviaremos el número de rastreo para que veas exactamente por dónde viene t
   });
 
   // Header/footer dynamic text
-  document.getElementById('storeNameHeader').textContent = STORE_NAME + ' 🌙';
+  document.getElementById('storeNameHeader').textContent = STORE_NAME;
   document.getElementById('storeNameFooter').textContent = STORE_NAME;
   document.getElementById('storeCityFooter').textContent = STORE_CITY;
   document.getElementById('expressBanner').textContent =
     `Envíos express hoy en ${STORE_CITY} 🌴 · Pago contra entrega · Cambios sin complicaciones`;
   floatingWA.href = `${WHATSAPP_BASE_URL}?text=${encodeURIComponent('¡Hola, ' + STORE_NAME + '! 🌙 Quiero más información sobre sus productos.')}`;
+
+  // Cargar logo
+  storeLogo.src = LOGO_URL;
+  storeLogo.onerror = function(){
+    this.src = 'https://placehold.co/100x100/7c3aed/c6ff00?text=Aura';
+  };
 
   function money(n){
     const num = Number(n) || 0;
